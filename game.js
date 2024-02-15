@@ -49,38 +49,49 @@ const questions = [
 ];
 
 // Quiz variables//
-
+const quizSection = document.querySelector(".quiz");
+const resultSection = document.querySelector(".result");
 const questionElement = document.getElementById("question");
 const answerButtons= document.getElementById("answer-buttons");
 const nextBtn = document.getElementById("next-btn");
-const startBtn = document.getElementById("start-quiz");
+const startBtn = document.getElementById("start-btn");
 const saveScoreBtn = document.getElementById("saveScore");
 
 let currentQuestionIndex = 0;
 let score = 0;
 
 var timeLeft = 45;
-var timerEl = document.getElementById('timer-div');
+var timerEl = document.querySelector('.time-left');
+var timerId;
 
 // Functions for quiz to run//
 
     // Start //
 function startQuiz (){
+
     currentQuestionIndex = 0;
     score = 0;
     nextBtn.innerHTML = "Next";
+    timeLeft = 45;
+    
+    // Start the Countdown timer //
+    timerId = setInterval(tick, 1000);
+
+    // Show the first question //
     showQuestion();
+    
+    // Show Quiz Section when the game starts //
+    quizSection.style.display = "block";
 }
-    // Timer //
-function countdown() {
+
+function tick() {
+    timeLeft--;
+    timerEl.innerHTML = timeLeft;
     if (timeLeft <= 0) {
-        setInterval(countdown, 800);
-        return;
-    } else {
-        timerEl.innerHTML = timeLeft;
-        timeLeft--;
+        clearInterval(timerId);
     }
 }
+
     // Show Question //
 function showQuestion(){
     resetState();
@@ -115,6 +126,7 @@ function selectAnswer(e){
         score++;
     }else{
         selectedBtn.classList.add("incorrect");
+        timeLeft -=5;
     }
     Array.from(answerButtons.children).forEach(button => {
         if(button.dataset.correct === "true"){
@@ -130,6 +142,9 @@ function showScore(){
     questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
     nextBtn.innerHTML = "Play Again";
     nextBtn.style.display = "block";
+    resultSection.style.display = "block";
+    startBtn.style.display = "none";
+    clearInterval(timerId);
 }
     // Reveal 'next' button //
 function handleNextBtn(){
@@ -157,6 +172,13 @@ nextBtn.addEventListener("click", ()=>{
     }
 });
 
-saveScoreBtn.addEventListener("click", saveScore);
+function init() {
+    quizSection.style.display = "none";
+    resultSection.style.display = "none";
+}
 
-startQuiz();
+    // Initialise the Quiz
+init();
+
+saveScoreBtn.addEventListener("click", saveScore);
+startBtn.addEventListener("click", startQuiz);
