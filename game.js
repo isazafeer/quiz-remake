@@ -53,19 +53,35 @@ const questions = [
 const questionElement = document.getElementById("question");
 const answerButtons= document.getElementById("answer-buttons");
 const nextBtn = document.getElementById("next-btn");
+const startBtn = document.getElementById("start-quiz");
+const saveScoreBtn = document.getElementById("saveScore");
 
 let currentQuestionIndex = 0;
 let score = 0;
 
+var timeLeft = 45;
+var timerEl = document.getElementById('timer-div');
+
 // Functions for quiz to run//
 
+    // Start //
 function startQuiz (){
     currentQuestionIndex = 0;
     score = 0;
     nextBtn.innerHTML = "Next";
     showQuestion();
 }
-
+    // Timer //
+function countdown() {
+    if (timeLeft <= 0) {
+        setInterval(countdown, 800);
+        return;
+    } else {
+        timerEl.innerHTML = timeLeft;
+        timeLeft--;
+    }
+}
+    // Show Question //
 function showQuestion(){
     resetState();
     let currentQuestion = questions[currentQuestionIndex];
@@ -90,7 +106,7 @@ function resetState(){
         answerButtons.removeChild(answerButtons.firstChild);
     }
 }
-
+    // Correct/incorrect answer color //
 function selectAnswer(e){
     const selectedBtn = e.target;
     const isCorrect = selectedBtn.dataset.correct === "true";
@@ -108,14 +124,14 @@ function selectAnswer(e){
     });
     nextBtn.style.display = "block";
 }
-
+    // Result //
 function showScore(){
     resetState();
     questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
-    nextButton.innerHTML = "Play Again";
-    nextButton.style.display = "block";
+    nextBtn.innerHTML = "Play Again";
+    nextBtn.style.display = "block";
 }
-
+    // Reveal 'next' button //
 function handleNextBtn(){
     currentQuestionIndex++;
     if(currentQuestionIndex < questions.length){
@@ -125,6 +141,14 @@ function handleNextBtn(){
     }
 }
 
+function saveScore() {
+    var name = document.getElementById("name").value;
+    
+    localStorage.setItem(name, score);
+}
+
+    // Event Listeners //
+
 nextBtn.addEventListener("click", ()=>{
     if(currentQuestionIndex < questions.length){
         handleNextBtn();
@@ -132,5 +156,7 @@ nextBtn.addEventListener("click", ()=>{
         startQuiz();
     }
 });
+
+saveScoreBtn.addEventListener("click", saveScore);
 
 startQuiz();
