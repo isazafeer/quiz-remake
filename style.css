@@ -49,13 +49,13 @@ body {
     transition: all 0.3s;
 }
 
-.btn:hover {
+.btn:hover:not([disabled]) {
     background:#222;
     color: #fff;
 }
 
 #next-btn {
-    background-color: #999;
+    background-color: #3ad;
     color: #000;
     font-weight: 500;
     width: 100px;
@@ -66,9 +66,18 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
+    display: block;
+    display: none;
 }
 
 #next-btn:hover {
-    background:#3ad;
+    background:#000;
     color: #fff;
+}
+
+.correct {
+    background-color: lightgreen;
+}
+.incorrect {
+    background-color: lightcoral;
 }
